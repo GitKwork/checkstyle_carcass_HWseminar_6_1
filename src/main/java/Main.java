@@ -1,72 +1,55 @@
 /**
- * Реализовать алгоритм перевода из инфиксной записи в постфиксную для арифметического выражения.
- * Вычислить запись если это возможно
+ * 1603. Design Parking System
+ * Design a parking system for a parking lot. The parking lot has three kinds of parking spaces:
+ * big, medium, and small, with a fixed number of slots for each size.
+ * <p>
+ * Implement the ParkingSystem class:
+ * <p>
+ * ParkingSystem(int big, int medium, int small) Initializes object of the ParkingSystem class.
+ * The number of slots for each parking space are given as part of the constructor.
+ * bool addCar(int carType) Checks whether there is a parking space of carType for the car that
+ * wants to get into the parking lot. carType can be of three kinds: big, medium, or small, which
+ * are represented by 1, 2, and 3 respectively. A car can only park in a parking space of its carType.
+ * If there is no space available, return false, else park the car in that size space and return true.
  */
 
-import java.util.Stack;
+import java.util.*;
+import java.lang.*;
 
 public class Main {
 
-    public static void main(String[] args) {
+    public void main(String args[]) {
         boolean isFormatted = false;
         String request = "пожалуйста форматируйте код";
-        // исправили теперь build succcessful
-//        if (isFormatted) {
-        String infix = "A+(B*C)-(D*E)+F/D";
-        String postfix = infixToPostfix(infix);
-        System.out.println(postfix);
-//        }
+        ParkingSystem obj = new ParkingSystem(1, 1, 0);
+        System.out.print(obj.addCar(1) + " ");
+        System.out.print(obj.addCar(2) + " ");
+        System.out.print(obj.addCar(3) + " ");
     }
 
-    public static int prec(char c) {
-        if (c == '*' || c == '/') {
-            return 3;
-        }
-        if (c == '+' || c == '-') {
-            return 4;
-        }
-        if (c == '&') {
-            return 8;
-        }
-        if (c == '^') {
-            return 9;
-        }
-        if (c == '|') {
-            return 10;
-        }
-        return Integer.MAX_VALUE;
-    }
+    class ParkingSystem {
+        int big, medium, small;
 
-    public static boolean isOperand(char c) {
-        return (c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z') || (c >= '0' && c <= '9');
-    }
-
-    public static String infixToPostfix(String infix) {
-        if (infix == null || infix.length() == 0) {
-            return infix;
+        public ParkingSystem(int big, int medium, int small) {
+            this.big = big;
+            this.medium = medium;
+            this.small = small;
         }
-        Stack<Character> s = new Stack<>();
-        StringBuilder postfix = new StringBuilder();
-        for (char c : infix.toCharArray()) {
-            if (c == '(') {
-                s.add(c);
-            } else if (c == ')') {
-                while (s.peek() != '(') {
-                    postfix.append(s.pop());
-                }
-                s.pop();
-            } else if (isOperand(c)) {
-                postfix.append(c);
+
+        public boolean addCar(int carType) {
+            if (carType == 1) {
+                if (big == 0) return false;
+                big--;
+            } else if (carType == 2) {
+                if (medium == 0) return false;
+                medium--;
+
             } else {
-                while (!s.isEmpty() && prec(c) >= prec(s.peek())) {
-                    postfix.append(s.pop());
-                }
-                s.add(c);
+                if (small == 0) return false;
+                small--;
+
             }
+            return true;
         }
-        while (!s.isEmpty()) {
-            postfix.append(s.pop());
-        }
-        return postfix.toString();
     }
 }
